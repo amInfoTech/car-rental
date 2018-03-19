@@ -8,7 +8,7 @@ Aaron Morley, Michael Doran, Dylan Jech, Stephen Tidjani, Joshua Ramczyk
 
 Project Goal:
 
-Create an ERD for the company, an SQL Database, a MySQL Database, and a PHP & HTML form to retrieve data from the server.
+Create an ERD for the company, an SQL Database, and a PHP & HTML form to retrieve data from the server.
 
 
 /Form:  HTML and PHP code that we wrote in order to help the user interact with the server.
