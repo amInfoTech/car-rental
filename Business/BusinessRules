@@ -1,0 +1,50 @@
+Assumptions / Business Rules
+ 
+Line Table:
+  Miles before will be populated when the row is created, but miles after will be null until the vehicle is returned
+  Vehicle can only be returned to the location in which it was rented from.
+  A line contains one and only one vehicle. 
+  A vehicle can be in zero or many lines. 
+  A line includes zero or many damages.
+  A damage can be in zero or many lines. 
+ 
+Vehicle Table:
+  A car that is rented must be returned to the location from which it was rented. 
+  A vehicle belongs to one and only one rental class.
+  A rental class belongs to zero or many vehicles. 
+  A vehicle can be bought from one and only one manufacturer.
+  A manufacturer can sell one or many vehicles to us.
+  A vehicle has one and only one location. 
+  A location can have zero or many vehicles. 
+  When a vehicles is returned, the number that is in MILES_AFTER will become the new mileage for that vehicle. 
+
+Invoice Table:
+  An invoice is made by one and only one location.
+  A location has zero or many invoices.
+  An invoice contains one or many lines.
+  A line belongs to one and only one invoice. 
+  An invoice is assigned to one and only one customer.
+  A customer can have zero or many invoices. 
+
+Employee Table:
+  A employee works at zero or one locations.
+  A location has zero or many employees. 
+ 
+Other:
+  There is a certain amount that you pay upfront when you first rent the vehicle. This is the BASE_PRICE from the RENTAL_CLASS table. When the vehicle is returned, you pay for the amount of days rented, miles driven and for any damages that might have been done. 
+  If a customer does not return the vehicle within a certain day, they are charged for the next day no matter how far into the next day it is. 
+  The days are based on when the customer checks out the vehicle. 
+  When a vehicle is returned, all money that is due must be payed right then and there. 
+
+-
+Normalization Steps
+
+Our group did not really have too many normalization steps as we attempted to design the database already in third normal form. However, as we worked on what we thought was the finished ERD more and more, we realized that there were many discrepancies with our thought process. One such example is when somebody maybe wanted to rent more than one vehicle at a time. Initially they would have had to make separate purchases for each vehicle. We found a way around this by creating a line table that has a relationship with invoice. The invoice table acts as a sort of receipt, while the line table contains the line of that receipt. This allows for customers to rent more than one vehicle at a time. Another problem we ran in to was when a vehicle happened to come back with multiple things wrong with it. In this case we created a bridge table between line and invoice to account for when a vehicle is returned with multiple different damages. 
+
+-
+MySQL / PHP Web Form
+
+Clicking the button “Get Revenue” will output a below php form with Total Revenue by Location
+
+
+ 

@@ -1,0 +1,57 @@
+One requirement of the project was to grab the total revenue for each location. Here is the SQL code that we wrote in order to do that.
+
+SQL Statement to get Total Revenue for each Location
+
+-- Make sure we have the correct database selected
+USE Timmy_Car_Rental;
+GO
+
+-- Create CTEs so that we do not grab info we will not use
+;WITH BasePrices AS (
+	SELECT CLASS_ID, BASE_PRICE, COST_PER_DAY, COST_PER_MILE
+	FROM RENTAL_CLASS),
+	
+	Vehicles AS (
+	SELECT VEHICLE_VIN, CLASS_ID
+	FROM VEHICLE),
+
+	Lines AS (
+	SELECT LINE_ID, INVOICE_ID, RENT_DATE, RETURN_DATE, MILES_BEFORE, MILES_AFTER, 
+VEHICLE_VIN
+	FROM LINE),
+
+	Invoices AS (
+	SELECT INVOICE_ID, LOCATION_ID
+	FROM INVOICE),
+
+	Locations AS (
+	SELECT LOCATION_ID, LOCATION_CITY, LOCATION_STATE
+	FROM LOCATION),
+
+	Damages AS (
+-- Grab the location ID and the total revenue it has reveived from damages
+	SELECT I.LOCATION_ID, SUM(DMG_COST) AS REVENUE_FROM_DAMAGES 
+	FROM INVOICE AS I 
+	LEFT OUTER JOIN LINE AS L
+		ON I.INVOICE_ID = L.INVOICE_ID
+	LEFT OUTER JOIN DAMAGE_LIST AS DL
+		ON DL.LINE_ID = L.LINE_ID
+	LEFT OUTER JOIN DAMAGE AS D
+		ON D.DMG_ID = DL.DMG_ID
+	GROUP BY I.LOCATION_ID)
+
+SELECT	I.LOCATION_ID,
+		LO.LOCATION_CITY,
+		LO.LOCATION_STATE,
+-- Sum up all the money that each location has got from all sources
+		SUM((DATEDIFF(DAY, RENT_DATE, RETURN_DATE) * COST_PER_DAY) + 
+			((MILES_AFTER - MILES_BEFORE) * COST_PER_MILE) + 
+			REVENUE_FROM_DAMAGES + 
+			BASE_PRICE) AS TOTAL_REVENUE
+FROM Invoices AS I
+INNER JOIN Lines AS L ON L.INVOICE_ID = I.INVOICE_ID
+INNER JOIN Vehicles AS V ON L.VEHICLE_VIN LIKE V.VEHICLE_VIN
+INNER JOIN BasePrices AS B ON B.CLASS_ID = V.CLASS_ID
+INNER JOIN Locations AS LO ON LO.LOCATION_ID = I.LOCATION_ID
+INNER JOIN Damages AS D ON D.LOCATION_ID = I.LOCATION_ID
+GROUP BY I.LOCATION_ID, LO.LOCATION_CITY, LO.LOCATION_STATE;
