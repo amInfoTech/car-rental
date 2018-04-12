@@ -37,11 +37,6 @@ Other:
   When a vehicle is returned, all money that is due must be payed right then and there. 
 
 -
-Normalization Steps
-
-Our group did not really have too many normalization steps as we attempted to design the database already in third normal form. However, as we worked on what we thought was the finished ERD more and more, we realized that there were many discrepancies with our thought process. One such example is when somebody maybe wanted to rent more than one vehicle at a time. Initially they would have had to make separate purchases for each vehicle. We found a way around this by creating a line table that has a relationship with invoice. The invoice table acts as a sort of receipt, while the line table contains the line of that receipt. This allows for customers to rent more than one vehicle at a time. Another problem we ran in to was when a vehicle happened to come back with multiple things wrong with it. In this case we created a bridge table between line and invoice to account for when a vehicle is returned with multiple different damages. 
-
--
 MySQL / PHP Web Form
 
 Clicking the button “Get Revenue” will output a below php form with Total Revenue by Location
